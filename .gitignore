@@ -1,0 +1,12 @@
+#python binary
+*.pyc
+*.pyo
+
+
+#c++ binary
+*.o
+*.so
+*.a
+*.la
+
+
