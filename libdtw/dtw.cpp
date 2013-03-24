@@ -1,25 +1,28 @@
 #include "dtw.h"
-#include <iostream>
 
-dtw::dtw()
+
+
+
+signature::signature(std::vector<point>& p)
 {
+	points = p;
 	std::cout << "ctor" << std::endl;
 }
 
-bool dtw::check(std::vector<point> first, std::vector<point> second)
-{
-	for (int i=0; i < first.size(); i++)
+bool signature::operator==(signature const & s) const
+{	
+	for (int i=0; i < points.size(); i++)
 	{
-		std::cout << first[i].x << " " << first[i].y << std::endl;
+		std::cout << points[i].x << " " << points[i].y << std::endl;
 	}
 
-	for (int i=0; i < second.size(); i++)
+	for (int i=0; i < s.points.size(); i++)
 	{
-		std::cout << second[i].x << " " << second[i].y << std::endl;
+		std::cout << s.points[i].x << " " << s.points[i].y << std::endl;
 	}
 }
 
-dtw::~dtw()
+signature::~signature()
 {
 	std::cout << "dtor" << std::endl;
 }

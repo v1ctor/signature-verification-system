@@ -2,6 +2,7 @@
 #define DYNAMIC_TIME_WARPER_H
 
 #include <vector>
+#include <iostream>
 
 struct point
 {
@@ -12,16 +13,14 @@ struct point
 };
 
 
-class dtw
+class signature
 {
 public:
-	dtw();
-	~dtw();
-	static bool check(std::vector<point> first, std::vector<point> second);
-	//void compare();
-	//bool operator==()
+	signature(std::vector<point>& p);
+	~signature();
+	bool operator==(signature const & s) const;
+
+private:
+	std::vector<point> points;
 };
-
-
 #endif //DYNAMIC_TIME_WARPER_H
-

@@ -8,9 +8,9 @@
 #include "dtw.h"
 %}
 
+%rename (__eq__) signature::operator==();
+
 namespace std
 {
-	%template(vectorPoint) vector<point>;
+	%template(points) vector<point>;
 }
-
-
