@@ -16,3 +16,6 @@
 swigtest/*.cxx
 swigtest/*.py
 
+#libdtw
+libdtw/*.py
+libdtw/*.cxx
