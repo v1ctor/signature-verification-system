@@ -19,3 +19,7 @@ swigtest/*.py
 #libdtw
 libdtw/*.py
 libdtw/*.cxx
+.project
+.cproject
+.pydevproject
+.settings
