@@ -21,6 +21,7 @@ Configuration::Configuration(std::string configPath)
 		const Setting& dataSourceConfig = root["dataSource"];
 		dataSourceConfig.lookupValue("host", host);
 		dataSourceConfig.lookupValue("port", port);
+		dataSourceConfig.lookupValue("dbName", dbName);
 
 	} catch (const FileIOException &fioex)
 	{
@@ -47,6 +48,7 @@ void Configuration::initDefault()
 {
 	host = "localhost";
 	port = 27017;
+	dbName = "sal.users";
 }
 
 } /* namespace SignatureAuthLibrary */

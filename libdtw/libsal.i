@@ -1,4 +1,4 @@
-%module sal
+%module libsal
 
 %{
 #include <vector>

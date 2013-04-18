@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <iostream>
+#include <mongo/client/dbclient.h>
 
 namespace SignatureAuthLibrary
 {
@@ -28,6 +29,7 @@ public:
 	Signature(std::vector<Point>& p);
 	bool operator==(Signature const & s) const;
 	const std::vector<Point>& getPoints() { return points; }
+	mongo::BSONArray toBson() const;
 	virtual ~Signature();
 
 private:

@@ -14,32 +14,32 @@ bool MongoDbDataSource::connect()
 {
 	try
 	{
-		c.connect(mongo::HostAndPort(config.getHost(), config.getPort()));
+		c = new mongo::DBClientConnection();
+		c->connect(mongo::HostAndPort(config.getHost(), config.getPort()));
 		return true;
 	} catch (const mongo::DBException &e)
 	{
 		std::cerr << "caught " << e.what() << std::endl;
 	}
+	return false;
 }
 
 bool MongoDbDataSource::saveSignature(long long uid, const Signature& s)
 {
 	mongo::BSONObjBuilder builder;
-	builder.append("uid", uid);
-//	const std::vector<Point>& points = s.getPoints();
-//	for (int i = 0; i<points.size(); i++) {
-//
-//	}
+	mongo::BSONObj signature = builder.append("uid", uid).append("points", s.toBson()).obj();
 
+	c->insert(config.getDbName(), signature);
+	return true;
 }
 
 Signature MongoDbDataSource::loadSignature(unsigned long uid)
 {
-
+	//std::auto_ptr<mongo::DBClientCursor> cursor = c->query(config.getDbName(), QUERY( "uid" << uid ));
 }
 
 MongoDbDataSource::~MongoDbDataSource()
 {
-	// TODO Auto-generated destructor stub
 }
+
 } /* namespace SignatureAuthLibrary */

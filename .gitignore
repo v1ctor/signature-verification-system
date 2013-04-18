@@ -17,7 +17,7 @@ swigtest/*.cxx
 swigtest/*.py
 
 #libdtw
-libdtw/*.py
+libdtw/sal.py
 libdtw/*.cxx
 .project
 .cproject

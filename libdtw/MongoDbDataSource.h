@@ -16,6 +16,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <memory>
 
 namespace SignatureAuthLibrary
 {
@@ -23,15 +24,14 @@ namespace SignatureAuthLibrary
 class MongoDbDataSource: public DataSource
 {
 public:
-	MongoDbDataSource(const Configuration& config) : config(config){};
+	MongoDbDataSource(Configuration& config) : config(config){};
 	bool connect();
 	bool saveSignature(long long uid, const Signature& s);
 	Signature loadSignature(unsigned long uid);
 	virtual ~MongoDbDataSource();
 private:
-	MongoDbDataSource(const MongoDbDataSource&);
-	Configuration config;
-	mongo::DBClientConnection c;
+	Configuration& config;
+	mongo::DBClientConnection* c;
 };
 
 } /* namespace SignatureAuthLibrary */

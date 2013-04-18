@@ -36,4 +36,17 @@ bool Signature::operator==(const Signature& s) const
 	return false;
 }
 
+mongo::BSONArray Signature::toBson() const
+{
+	mongo::BSONArrayBuilder bab;
+	for (int i = 0; i < points.size(); i++)
+	{
+		mongo::BSONObjBuilder pointBuilder;
+		mongo::BSONObj arr = pointBuilder.append("x", points[i].x).append("y",
+				points[i].y).obj();
+		bab.append(arr);
+	}
+	return bab.arr();
+}
+
 } /* namespace SignatureAuthLibrary */
