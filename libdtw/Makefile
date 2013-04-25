@@ -9,7 +9,7 @@ CXXFLAGS += `pkg-config --cflags libconfig++` -g -ggdb
 
 OBJS = $(notdir $(patsubst %.cpp,%.o,$(wildcard *.cpp))) 
 
-all: _libsal.so libsal.py py.test
+all: _libsal.so libsal.py build.test cxx.test py.test
 
 _libsal.so: ${OBJS} libsal_wrap.o 
 	g++ -shared libsal_wrap.o ${OBJS} ${LIBS} -Wl,-soname,libsal.so -o $@
@@ -19,10 +19,10 @@ libsal_wrap.o: libsal_wrap.cxx ${LIB_HEADERS}
 	g++ libsal_wrap.cxx -c -g -I${PYINC} -fPIC
 
 libsal_wrap.cxx: libsal.i
-	${SWIG} -c++ -python libsal.i
+	${SWIG} -c++ -python -w315 libsal.i
 
 libsal.py: libsal.i
-	${SWIG} -c++ -python libsal.i
+	${SWIG} -c++ -python -w315 libsal.i
 
 %.o:%.cpp
 	${CXX} $< -c -g -Wno-deprecated -fPIC ${CXXFLAGS} ${LIBS}
@@ -35,6 +35,14 @@ rebuild: clean all
 list:
 	@echo ${OBJS}
 
+build.test:
+	g++ test/capitest.cpp -o test/capitest -lsal -Ltest/ -g -ggdb
+
 py.test:
-	@echo "------------Start testing-------------"
+	@echo "------------Start python testing-------------"
 	python libtest.py
+
+cxx.test:
+	@echo "------------Start cxx testing-------------"
+	test/capitest mongo.cfg
+		

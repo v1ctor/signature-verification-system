@@ -11,6 +11,7 @@
 #include <vector>
 #include <iostream>
 #include <mongo/client/dbclient.h>
+#include <math.h>
 
 namespace SignatureAuthLibrary
 {
@@ -26,9 +27,15 @@ struct Point
 class Signature
 {
 public:
+	Signature(){};
 	Signature(std::vector<Point>& p);
+	Signature(const mongo::BSONElement& be);
+
 	bool operator==(Signature const & s) const;
+	const Point& operator[](int index) const;
+
 	const std::vector<Point>& getPoints() { return points; }
+	void append(Point p) {points.push_back(p);}
 	mongo::BSONArray toBson() const;
 	virtual ~Signature();
 

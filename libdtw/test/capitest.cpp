@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include <mongo/client/dbclient.h>
+#include <assert.h>
 
 using namespace std;
 
@@ -30,15 +31,16 @@ int main(int argc, char** argv)
 	points.push_back(Point(3,4));
 	points.push_back(Point(4,5));
 
-	Signature s(points);
+	Signature s1(points);
 
 	cout << "Save to database..." << endl;
-	ds->saveSignature(2, s);
+	ds->saveSignature(2, s1);
 
 	cout << "Load from database..." << endl;
-	Signature s1 = ds->loadSignature(2);
+	Signature s2 = ds->loadSignature(2);
 
-	assert(s1 == s);
+	//assert(s2 == NULL);
+	assert(s1 == s2);
 
 	cout << "Done!" << endl;
     }

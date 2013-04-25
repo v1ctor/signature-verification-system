@@ -18,7 +18,7 @@ class DataSource
 public:
 	virtual bool connect()=0;
 	virtual bool saveSignature(long long uid, const Signature& s)=0;
-	virtual Signature loadSignature(unsigned long uid)=0;
+	virtual Signature loadSignature(long long uid)=0;
 	virtual ~DataSource(){};
 };
 

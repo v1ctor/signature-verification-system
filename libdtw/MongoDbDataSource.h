@@ -10,6 +10,7 @@
 
 #include "DataSource.h"
 #include "Configuration.h"
+#include "CanNotLoadSignatureException.h"
 
 #include <mongo/client/dbclient.h>
 
@@ -24,14 +25,14 @@ namespace SignatureAuthLibrary
 class MongoDbDataSource: public DataSource
 {
 public:
-	MongoDbDataSource(Configuration& config) : config(config){};
+	MongoDbDataSource(Configuration& config);
 	bool connect();
 	bool saveSignature(long long uid, const Signature& s);
-	Signature loadSignature(unsigned long uid);
+	Signature loadSignature(long long uid);
 	virtual ~MongoDbDataSource();
 private:
 	Configuration& config;
-	mongo::DBClientConnection* c;
+	std::auto_ptr<mongo::DBClientConnection> c;
 };
 
 } /* namespace SignatureAuthLibrary */

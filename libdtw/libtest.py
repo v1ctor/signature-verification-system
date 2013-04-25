@@ -14,11 +14,14 @@ p.push_back(Point(2,3))
 p.push_back(Point(3,4))
 p.push_back(Point(4,5))
 
-s = Signature(p)
+s1 = Signature(p)
 print ("Save signature to database...")
-ds.saveSignature(1, s)
+ds.saveSignature(1, s1)
 
 print ("Load signature from database...")
-ds.loadSignature(1)
+s2 = ds.loadSignature(1)
+
+assert(s2 is None)
+assert(s1 != s2)
 
 print ("Done!")
