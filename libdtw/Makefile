@@ -9,14 +9,16 @@ CXXFLAGS += `pkg-config --cflags libconfig++` -g -ggdb
 
 OBJS = $(notdir $(patsubst %.cpp,%.o,$(wildcard *.cpp))) 
 
+CXX = g++
+
 all: _libsal.so libsal.py build.test cxx.test py.test
 
 _libsal.so: ${OBJS} libsal_wrap.o 
-	g++ -shared libsal_wrap.o ${OBJS} ${LIBS} -Wl,-soname,libsal.so -o $@
+	${CXX} -shared libsal_wrap.o ${OBJS} ${LIBS} -Wl,-soname,libsal.so -o $@
 	cp $@ test/libsal.so
 		
 libsal_wrap.o: libsal_wrap.cxx ${LIB_HEADERS}
-	g++ libsal_wrap.cxx -c -g -I${PYINC} -fPIC
+	${CXX} libsal_wrap.cxx -c -g -I${PYINC} -fPIC
 
 libsal_wrap.cxx: libsal.i
 	${SWIG} -c++ -python -w315 libsal.i
@@ -36,7 +38,7 @@ list:
 	@echo ${OBJS}
 
 build.test:
-	g++ test/capitest.cpp -o test/capitest -lsal -Ltest/ -g -ggdb
+	${CXX} test/capitest.cpp -o test/capitest -lsal -Ltest/ -g -ggdb
 
 py.test:
 	@echo "------------Start python testing-------------"
