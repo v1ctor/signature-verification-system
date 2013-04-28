@@ -4,19 +4,22 @@ SWIG = /usr/bin/swig
 LIB_SOURCES = Signature.cpp MongoDbDataSource.cpp Configuration.cpp 
 LIB_HEADERS = Signature.h MongoDbDataSource.h DataSource.h Configuration.h
 
-LIBS += `pkg-config --libs libconfig++` -L${PYLIB} -lpython2.7 -lmongoclient -L/usr/lib #-lboost_thread-mt -lboost_filesystem -lboost_program_options -lboost_system
+
+LIBS += `pkg-config --libs libconfig++` -L${PYLIB} -lpython2.7 -lmongoclient -L/usr/lib
 CXXFLAGS += `pkg-config --cflags libconfig++` -g -ggdb
 
 OBJS = $(notdir $(patsubst %.cpp,%.o,$(wildcard *.cpp))) 
 
 CXX = g++
 
-all: _libsal.so libsal.py build.test cxx.test py.test
+all: swig build.test cxx.test py.test
 
+swig: _libsal.so libsal.py
+	
 _libsal.so: ${OBJS} libsal_wrap.o 
 	${CXX} -shared libsal_wrap.o ${OBJS} ${LIBS} -Wl,-soname,libsal.so -o $@
 	cp $@ test/libsal.so
-		
+	
 libsal_wrap.o: libsal_wrap.cxx ${LIB_HEADERS}
 	${CXX} libsal_wrap.cxx -c -g -I${PYINC} -fPIC
 
@@ -37,8 +40,10 @@ rebuild: clean all
 list:
 	@echo ${OBJS}
 
-build.test:
-	${CXX} test/capitest.cpp -o test/capitest -lsal -Ltest/ -g -ggdb
+build.test: test/capitest
+
+test/capitest: test/capitest.cpp
+	${CXX} test/capitest.cpp -o test/capitest -lsal -lboost_system -lboost_thread -lboost_filesystem -Ltest/ -g -ggdb
 
 py.test:
 	@echo "------------Start python testing-------------"
@@ -46,5 +51,5 @@ py.test:
 
 cxx.test:
 	@echo "------------Start cxx testing-------------"
-	test/capitest mongo.cfg
+	env LD_LIBRARY_PATH=test/ test/capitest mongo.cfg
 		

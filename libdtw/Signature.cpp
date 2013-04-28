@@ -48,7 +48,7 @@ bool Signature::operator==(const Signature& s) const
     {
         for (int j=1; j<s.points.size(); j++)
         {
-            array[i][j] += (array[i-1][j-1] < array[i-1][j]) ? array[i-1][j-1] :((array[i-1][j] < array[i][j-1]) ? array[i-1][j] : array[i][j-1]);
+            //array[i][j] += (array[i-1][j-1] < array[i-1][j]) ? array[i-1][j-1] :((array[i-1][j] < array[i][j-1]) ? array[i-1][j] : array[i][j-1]);
             std::cout << matrix[i][j] << "\t\t\t";
         }
         std::cout << std::endl;
