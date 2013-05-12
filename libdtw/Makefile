@@ -1,8 +1,8 @@
 PYINC = /usr/include/python2.7/
 PYLIB = /usr/lib/python2.7/
 SWIG = /usr/bin/swig
-LIB_SOURCES = Signature.cpp MongoDbDataSource.cpp Configuration.cpp 
-LIB_HEADERS = Signature.h MongoDbDataSource.h DataSource.h Configuration.h
+LIB_SOURCES = AuthorizationManager.cpp Dtwsolver.cpp MongoDbDataSource.cpp Configuration.cpp 
+LIB_HEADERS = AuthorizationManager.h DtwSolver.h MongoDbDataSource.h DataSource.h Configuration.h
 
 
 LIBS += `pkg-config --libs libconfig++` -L${PYLIB} -lpython2.7 -lmongoclient -L/usr/lib
@@ -12,7 +12,7 @@ OBJS = $(notdir $(patsubst %.cpp,%.o,$(wildcard *.cpp)))
 
 CXX = g++
 
-all: swig build.test cxx.test py.test
+all: swig #build.test cxx.test py.test
 
 swig: _libsal.so libsal.py
 	
@@ -20,8 +20,8 @@ _libsal.so: ${OBJS} libsal_wrap.o
 	${CXX} -shared libsal_wrap.o ${OBJS} ${LIBS} -Wl,-soname,libsal.so -o $@
 	cp $@ test/libsal.so
 	
-libsal_wrap.o: libsal_wrap.cxx ${LIB_HEADERS}
-	${CXX} libsal_wrap.cxx -c -g -I${PYINC} -fPIC
+libsal_wrap.o: libsal_wrap.cxx #${LIB_HEADERS}
+	${CXX} libsal_wrap.cxx -c -static -static-libgcc -I${PYINC} -fPIC
 
 libsal_wrap.cxx: libsal.i
 	${SWIG} -c++ -python -w315 libsal.i
@@ -29,8 +29,20 @@ libsal_wrap.cxx: libsal.i
 libsal.py: libsal.i
 	${SWIG} -c++ -python -w315 libsal.i
 
-%.o:%.cpp
-	${CXX} $< -c -g -Wno-deprecated -fPIC ${CXXFLAGS} ${LIBS}
+AuthorizationManager.o:AuthorizationManager.cpp
+	${CXX} $< -c -Wno-deprecated -fPIC -static-libgcc
+
+DtwSolver.o:DtwSolver.cpp
+	${CXX} $< -c -Wno-deprecated -fPIC -static-libgcc
+
+MongoDbDataSource.o:MongoDbDataSource.cpp
+	${CXX} $< -c -Wno-deprecated -fPIC -static -static-libgcc -lmongoclient
+
+Configuration.o:Configuration.cpp
+	${CXX} $< -c -Wno-deprecated -fPIC -static -static-libgcc `pkg-config --cflags --libs libconfig++`
+
+#%.o:%.cpp
+#	${CXX} $< -c -g -Wno-deprecated -fPIC ${CXXFLAGS} ${LIBS}
 	
 clean:
 	rm -rf *.so *.o *.cxx *.pyc libsal.py

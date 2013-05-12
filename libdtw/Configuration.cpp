@@ -10,6 +10,22 @@
 namespace SignatureAuthLibrary
 {
 
+Configuration* Configuration::_instance = 0;
+
+Configuration* Configuration::init(std::string configPath)
+{
+	_instance = new Configuration(configPath);
+}
+
+Configuration* Configuration::instance()
+{
+	if (!_instance)
+	{
+		_instance = new Configuration();
+	}
+	return _instance;
+}
+
 Configuration::Configuration(std::string configPath)
 {
 	Config config;
@@ -41,7 +57,10 @@ Configuration::Configuration(std::string configPath)
 
 Configuration::~Configuration()
 {
-	// TODO Auto-generated destructor stub
+	if (!_instance)
+	{
+		delete _instance;
+	}
 }
 
 void Configuration::initDefault()
@@ -52,4 +71,3 @@ void Configuration::initDefault()
 }
 
 } /* namespace SignatureAuthLibrary */
-

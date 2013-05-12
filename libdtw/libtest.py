@@ -1,7 +1,7 @@
 from libsal import *
 
 print ("Configuration...")
-cfg = Configuration("mongo.cfg") 
+cfg = Configuration::init("mongo.cfg") 
 
 print ("Connect to database...")
 ds = MongoDbDataSource(cfg)

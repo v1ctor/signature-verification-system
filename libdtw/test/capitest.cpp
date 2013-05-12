@@ -18,10 +18,10 @@ int main(int argc, char** argv)
     if (argc > 1) 
     {
 	cout << "Configuration..." << endl;
-	Configuration cfg = Configuration(argv[1]);
+	Configuration* cfg = Configuration::init(argv[1]);
 
 	cout << "Connect to db..." << endl;
-	DataSource* ds = new MongoDbDataSource(cfg);
+	DataSource* ds = new MongoDbDataSource(*cfg);
 	ds->connect();
 
  	cout << "Generate sign..." << endl;

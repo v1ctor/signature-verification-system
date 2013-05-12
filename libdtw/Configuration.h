@@ -24,9 +24,8 @@ namespace SignatureAuthLibrary
 class Configuration
 {
 public:
-	Configuration(){initDefault();}
-	Configuration(std::string configPath);
-	virtual ~Configuration();
+	static Configuration* init(std::string configPath);
+	static Configuration* instance();
 	std::string getHost()
 	{
 		return host;
@@ -39,11 +38,19 @@ public:
 	{
 		return dbName;
 	}
+	~Configuration();
+
+private:
+	Configuration(){initDefault();}
+	Configuration(std::string configPath);
+
 private:
 	void initDefault();
 	std::string host;
 	int port;
 	std::string dbName;
+
+	static Configuration*  _instance;
 };
 
 } /* namespace SignatureAuthLibrary */

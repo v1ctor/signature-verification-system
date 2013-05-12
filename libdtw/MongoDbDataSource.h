@@ -19,19 +19,23 @@
 #include <vector>
 #include <memory>
 
+using std::vector;
+
 namespace SignatureAuthLibrary
 {
 
 class MongoDbDataSource: public DataSource
 {
 public:
-	MongoDbDataSource(Configuration& config);
+	MongoDbDataSource();
 	bool connect();
-	bool saveSignature(long long uid, const Signature& s);
-	Signature loadSignature(long long uid);
-	virtual ~MongoDbDataSource();
+	int saveSignature(long long uid, const vector< vector<int> >& points);
+	vector< vector<int> > loadSignature(long long uid);
+	virtual ~MongoDbDataSource(){};
 private:
-	Configuration& config;
+	mongo::BSONArray to_bson(const vector< vector<int> >& points);
+
+private:
 	std::auto_ptr<mongo::DBClientConnection> c;
 };
 

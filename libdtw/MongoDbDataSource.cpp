@@ -10,16 +10,16 @@
 namespace SignatureAuthLibrary
 {
 
-MongoDbDataSource::MongoDbDataSource(Configuration& config) :
-		config(config), c(new mongo::DBClientConnection())
-{
-}
+MongoDbDataSource::MongoDbDataSource() :
+	c(new mongo::DBClientConnection())
+{}
 
 bool MongoDbDataSource::connect()
 {
 	try
 	{
-		c->connect(mongo::HostAndPort(config.getHost(), config.getPort()));
+		c->connect(mongo::HostAndPort(Configuration::instance()->getHost(),
+			Configuration::instance()->getPort()));
 	} catch (const mongo::DBException &e)
 	{
 		std::cerr << "caught " << e.what() << std::endl;
@@ -27,23 +27,24 @@ bool MongoDbDataSource::connect()
 	}
 }
 
-bool MongoDbDataSource::saveSignature(long long uid, const Signature& s)
+int MongoDbDataSource::saveSignature(long long uid, const vector< vector<int> >& points) 
 {
 	mongo::BSONObjBuilder builder;
 	mongo::BSONObj signature = builder.append("uid", uid).append("points",
-			s.toBson()).obj();
-	c->insert(config.getDbName(), signature);
-	return true;
+			to_bson(points)).obj();
+	c->insert(Configuration::instance()->getDbName(), signature);
+	return 1;
 }
 
-Signature MongoDbDataSource::loadSignature(long long uid)
+vector< vector<int> > MongoDbDataSource::loadSignature(long long uid)
 {
 	mongo::BSONObjBuilder builder;
 	mongo::BSONObj query = builder.append("uid", uid).obj();
 
-	std::auto_ptr<mongo::DBClientCursor> cursor = c->query(config.getDbName(), mongo::Query(query));
+	std::auto_ptr<mongo::DBClientCursor> cursor = c->query(Configuration::instance()->getDbName(),
+		mongo::Query(query));
 
-	Signature result;
+	vector< vector<int> > result;
 	if (cursor->more())
 	{
 		mongo::BSONObj o = cursor->next();
@@ -51,8 +52,11 @@ Signature MongoDbDataSource::loadSignature(long long uid)
 
 		while(it.more())
 		{
-			mongo::BSONObj point = it.next().Obj();
-			result.append(Point(point.getField("x").Int(), point.getField("y").Int()));
+			mongo::BSONObj bo = it.next().Obj();
+			vector<int> point;
+			point.push_back(bo.getField("x").Int());
+			point.push_back(bo.getField("y").Int());
+			result.push_back(point);
 		}
 
 		return result;
@@ -61,8 +65,19 @@ Signature MongoDbDataSource::loadSignature(long long uid)
 	throw CanNotLoadSignatureException();
 }
 
-MongoDbDataSource::~MongoDbDataSource()
+mongo::BSONArray MongoDbDataSource::to_bson(const vector< vector<int> >& points)
 {
+	mongo::BSONArrayBuilder bab;
+	for (int i = 0; i < points.size(); i++)
+	{
+		mongo::BSONObjBuilder pointBuilder;
+		mongo::BSONObj arr = pointBuilder.append("x", points[i][0]).append("y",
+				points[i][1]).obj();
+		bab.append(arr);
+	}
+	return bab.arr();
 }
+
+
 
 } /* namespace SignatureAuthLibrary */
