@@ -12,6 +12,7 @@
 #include <iostream>
 #include <mongo/client/dbclient.h>
 #include <math.h>
+#include <algorithm>
 
 namespace SignatureAuthLibrary
 {
