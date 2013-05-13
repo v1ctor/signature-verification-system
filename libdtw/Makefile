@@ -5,7 +5,7 @@ LIB_SOURCES = AuthorizationManager.cpp Dtwsolver.cpp MongoDbDataSource.cpp Confi
 LIB_HEADERS = AuthorizationManager.h DtwSolver.h MongoDbDataSource.h DataSource.h Configuration.h
 
 
-LIBS += `pkg-config --libs libconfig++` -L${PYLIB} -lpython2.7 -lmongoclient -lboost_thread -lboost_system -lboost_filesystem -L/usr/lib 
+LIBS += `pkg-config --libs libconfig++` -L${PYLIB} -lpython2.7 -lmongoclient -lboost_thread -lboost_system -lboost_filesystem -lssl -L/usr/lib 
 CXXFLAGS += `pkg-config --cflags libconfig++` -g -ggdb
 
 OBJS = $(notdir $(patsubst %.cpp,%.o,$(wildcard *.cpp))) 
