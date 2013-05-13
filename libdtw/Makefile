@@ -12,16 +12,15 @@ OBJS = $(notdir $(patsubst %.cpp,%.o,$(wildcard *.cpp)))
 
 CXX = g++
 
-all: swig #build.test cxx.test py.test
+all: swig deploy test
 
 swig: _libsal.so libsal.py
 	
 _libsal.so: ${OBJS} libsal_wrap.o 
-	${CXX} -shared libsal_wrap.o ${OBJS} ${LIBS} -Wl,-soname,libsal.so -o $@
-	cp $@ test/libsal.so
+	${CXX} -shared libsal_wrap.o ${OBJS}  ${LIBS} -Wl,-soname,libsal.so -o $@
 	
 libsal_wrap.o: libsal_wrap.cxx #${LIB_HEADERS}
-	${CXX} libsal_wrap.cxx -c -static -static-libgcc -I${PYINC} -fPIC
+	${CXX} libsal_wrap.cxx -c -I${PYINC} -fPIC
 
 libsal_wrap.cxx: libsal.i
 	${SWIG} -c++ -python -w315 libsal.i
@@ -30,38 +29,29 @@ libsal.py: libsal.i
 	${SWIG} -c++ -python -w315 libsal.i
 
 AuthorizationManager.o:AuthorizationManager.cpp
-	${CXX} $< -c -Wno-deprecated -fPIC -static-libgcc
+	${CXX} $< -c -Wno-deprecated -fPIC
 
 DtwSolver.o:DtwSolver.cpp
-	${CXX} $< -c -Wno-deprecated -fPIC -static-libgcc
+	${CXX} $< -c -Wno-deprecated -fPIC
 
 MongoDbDataSource.o:MongoDbDataSource.cpp
-	${CXX} $< -c -Wno-deprecated -fPIC -static -static-libgcc -lmongoclient
+	${CXX} $< -c -Wno-deprecated -fPIC -lmongoclient
 
 Configuration.o:Configuration.cpp
-	${CXX} $< -c -Wno-deprecated -fPIC -static -static-libgcc `pkg-config --cflags --libs libconfig++`
+	${CXX} $< -c -Wno-deprecated -fPIC `pkg-config --cflags --libs libconfig++`
 
-#%.o:%.cpp
-#	${CXX} $< -c -g -Wno-deprecated -fPIC ${CXXFLAGS} ${LIBS}
-	
 clean:
-	rm -rf *.so *.o *.cxx *.pyc libsal.py
+	rm -rf *.so *.o *.cxx *.pyc libsal.py build/
 
 rebuild: clean all
 
+deploy:
+	rm -rf build/
+	mkdir build/
+	cp _libsal.so libsal.py data/* build/
+
+test:
+	cd build/ && python test.py && cd ..
+
 list:
 	@echo ${OBJS}
-
-build.test: test/capitest
-
-test/capitest: test/capitest.cpp
-	${CXX} test/capitest.cpp -o test/capitest -lsal -lboost_system -lboost_thread -lboost_filesystem -Ltest/ -g -ggdb
-
-py.test:
-	@echo "------------Start python testing-------------"
-	python libtest.py
-
-cxx.test:
-	@echo "------------Start cxx testing-------------"
-	env LD_LIBRARY_PATH=test/ test/capitest mongo.cfg
-		

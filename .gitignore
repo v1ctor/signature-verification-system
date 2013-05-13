@@ -20,6 +20,7 @@ swigtest/*.py
 libdtw/libsal.py
 libdtw/*.cxx
 libdtw/test/capitest
+libdtw/build/
 .project
 .cproject
 .pydevproject
