@@ -1,0 +1,7 @@
+depends:
+	swig
+	libssl
+	libboost_thread
+	libboost_filesystem
+	libconfig
+	mongodb
