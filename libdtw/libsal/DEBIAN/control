@@ -1,0 +1,13 @@
+Package: libsal
+Version: 1.0-1
+Maintainer: Victor Buldakov <victor@buldakov.org>
+Architecture: amd64
+Section: libs
+Description: Signature authorization library
+ This library used to add authorization with. 
+ dinamic sugnature functionality to your application.
+ This application have two API and python bindings
+Depends: python (>= 2.7), libconfig++-dev (>= 1.4.8), mongodb (>= 2.2), libssl-dev (>= 1.0), libc6 (>= 2.17)
+Origin: Victor Buldakov
+Priority: optional
+

@@ -25,3 +25,4 @@ libdtw/build/
 .cproject
 .pydevproject
 .settings
+*.deb
