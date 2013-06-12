@@ -30,7 +30,7 @@ bool MongoDbDataSource::connect()
 int MongoDbDataSource::saveSignature(long long uid, const vector< vector<int> >& points) 
 {
 	mongo::BSONObjBuilder builder;
-	mongo::BSONObj signature = builder.append("uid", uid).append("points",
+	mongo::BSONObj signature = builder.append("_id", uid).append("points",
 			to_bson(points)).obj();
 	c->insert(Configuration::instance()->getDbName(), signature);
 	return 1;
@@ -39,7 +39,7 @@ int MongoDbDataSource::saveSignature(long long uid, const vector< vector<int> >&
 vector< vector<int> > MongoDbDataSource::loadSignature(long long uid)
 {
 	mongo::BSONObjBuilder builder;
-	mongo::BSONObj query = builder.append("uid", uid).obj();
+	mongo::BSONObj query = builder.append("_id", uid).obj();
 
 	std::auto_ptr<mongo::DBClientCursor> cursor = c->query(Configuration::instance()->getDbName(),
 		mongo::Query(query));

@@ -39,6 +39,10 @@ public:
 		return dbName;
 	}
 	~Configuration();
+	float getThreshold()
+	{
+		return threshold;
+	}
 
 private:
 	Configuration(){initDefault();}
@@ -49,6 +53,7 @@ private:
 	std::string host;
 	int port;
 	std::string dbName;
+	float threshold;
 
 	static Configuration*  _instance;
 };

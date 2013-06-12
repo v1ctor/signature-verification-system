@@ -12,7 +12,19 @@ AuthorizationManager::AuthorizationManager(std::string config)
 
 int AuthorizationManager::registry(long long uid, std::vector< std::vector<int> > firstSign, std::vector< std::vector<int> > secondSign)
 {
-    return ds->saveSignature(uid, secondSign);
+    try
+    {
+        ds->loadSignature(uid);
+    }
+    catch (const CanNotLoadSignatureException& e)
+    {
+        if (DtwSolver::check(firstSign, secondSign)) {
+            return ds->saveSignature(uid, firstSign);
+        } else {
+            return -1;
+        }
+    }
+    return -2;
 }
 
 int AuthorizationManager::authorize(long long uid, std::vector< std::vector<int> > sign)

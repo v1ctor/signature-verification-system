@@ -38,6 +38,8 @@ Configuration::Configuration(std::string configPath)
 		dataSourceConfig.lookupValue("host", host);
 		dataSourceConfig.lookupValue("port", port);
 		dataSourceConfig.lookupValue("dbName", dbName);
+		const Setting& dtwConfig = root["dtw"];
+		dtwConfig.lookupValue("threshold", threshold);
 
 	} catch (const FileIOException &fioex)
 	{
